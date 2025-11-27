@@ -4,8 +4,8 @@
  */
 
 const SUPABASE_CONFIG = {
-    url: 'https://ajnnghehyotlyaeqntcg.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqbm5naGVoeW90bHlhZXFudGNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxNjUwNTIsImV4cCI6MjA3OTc0MTA1Mn0.AscSVnB_nGHTimke4xxySzZ73r6pCSOQ3VTIvBaQvg8',
+    url: 'https://tpkafgnufwbqcdhiviwo.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwa2FmZ251ZndicWNkaGl2aXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQyNDI2MjMsImV4cCI6MjA3OTgxODYyM30.eWdrgGskoly4xwj2gTtVmr_Uot2llRcNCTNViQunAgo',
     tables: {
         products: 'products',
         categories: 'categories'

@@ -12,12 +12,19 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeEventListeners();
 });
 
-// Check authentication status
-async function checkAuthStatus() {
-    const { data: { session } } = await supabase.auth.getSession();
+// Admin credentials
+const ADMIN_CREDENTIALS = {
+    username: 'admin',
+    password: 'admin123'
+};
 
-    if (session) {
-        showAdminPanel(session.user.email);
+// Check authentication status
+function checkAuthStatus() {
+    const isAuth = localStorage.getItem('adminAuthenticated') === 'true';
+    const adminUser = localStorage.getItem('adminUsername');
+
+    if (isAuth && adminUser) {
+        showAdminPanel(adminUser);
     } else {
         showLoginScreen();
     }
@@ -31,11 +38,11 @@ function showLoginScreen() {
 }
 
 // Show admin panel
-function showAdminPanel(email) {
+function showAdminPanel(username) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     document.querySelector('.admin-container').classList.add('active');
-    document.getElementById('adminUsername').textContent = email;
+    document.getElementById('adminUsername').textContent = username;
     isLoggedIn = true;
 
     // Load data
@@ -96,28 +103,25 @@ function initializeEventListeners() {
 }
 
 // Handle login
-async function handleLogin(e) {
+function handleLogin(e) {
     e.preventDefault();
 
-    const email = document.getElementById('email').value;
+    const username = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const loginAlert = document.getElementById('loginAlert');
 
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-        if (error) throw error;
+    // Simple authentication check
+    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+        // Store authentication in localStorage
+        localStorage.setItem('adminAuthenticated', 'true');
+        localStorage.setItem('adminUsername', username);
 
         // Show admin panel
-        showAdminPanel(data.user.email);
-    } catch (error) {
-        console.error('Login error:', error);
+        showAdminPanel(username);
+    } else {
         loginAlert.innerHTML = `
             <div class="alert alert-error">
-                ⚠️ ${error.message || 'Email atau password salah!'}
+                ⚠️ Username atau password salah!
             </div>
         `;
 
@@ -128,8 +132,9 @@ async function handleLogin(e) {
 }
 
 // Handle logout
-async function handleLogout() {
-    await supabase.auth.signOut();
+function handleLogout() {
+    localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminUsername');
     showLoginScreen();
 }
 
