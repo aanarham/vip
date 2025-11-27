@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT VALOR INSPIRATION PESONA - Katalog Produk</title>
+    <meta name="description" content="PT VALOR INSPIRATION PESONA - Katalog produk lengkap dengan berbagai kategori termasuk DIOSYS, GIP, Softlens, dan produk kecantikan lainnya">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">🛍️ PT VALOR</a>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cari produk...">
+                </div>
+                
+                <div class="nav-links">
+                    <a href="about.html" class="btn btn-secondary">Tentang</a>
+                    <a href="admin.html" class="btn btn-primary">Admin Panel</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="main-content">
+            <!-- Sidebar - Category Filter -->
+            <aside class="sidebar">
+                <div class="filter-card">
+                    <h2 class="filter-title">Kategori</h2>
+                    <ul class="category-list" id="categoryList">
+                        <li class="category-item active" data-category="ALL">Semua Produk</li>
+                        <!-- Categories will be loaded dynamically from Supabase -->
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Products Section -->
+            <section class="products-section">
+                <div class="section-header">
+                    <h1 class="section-title">Semua Produk</h1>
+                    <div class="product-count" id="productCount">0 Produk</div>
+                </div>
+
+                <div id="productsContainer">
+                    <div class="loading">Memuat produk</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Detail Produk</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Product details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase Configuration -->
+    <script src="supabase-config.js"></script>
+    <!-- Main Script -->
+    <script src="script.js"></script>
+</body>
+</html>

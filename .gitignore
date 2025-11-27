@@ -1,0 +1,28 @@
+# PHP files (no longer needed)
+*.php
+api/
+
+# Database
+*.sql
+
+# Uploads folder (images now in Appwrite)
+uploads/
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files (if you add any)
+.env
+.env.local
