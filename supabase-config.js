@@ -28,14 +28,9 @@ function getImageUrl(filePath) {
 // Helper function to get image preview URL (with transformation)
 function getImagePreview(filePath, width = 400, height = 400) {
     if (!filePath) return null;
+    // Fallback to standard URL since Image Transformations might not be enabled on free plan
     const { data } = supabase.storage
         .from(SUPABASE_CONFIG.bucket)
-        .getPublicUrl(filePath, {
-            transform: {
-                width: width,
-                height: height,
-                resize: 'cover'
-            }
-        });
+        .getPublicUrl(filePath);
     return data.publicUrl;
 }
