@@ -144,7 +144,7 @@ function filterProducts() {
     // Filter by search query
     if (searchQuery) {
         filtered = filtered.filter(p =>
-            p.nama_product.toLowerCase().includes(searchQuery) ||
+            p['nama produk'].toLowerCase().includes(searchQuery) ||
             p.kategori.toLowerCase().includes(searchQuery)
         );
     }
@@ -196,14 +196,14 @@ function createProductCard(product, index) {
     // Get image URL from Supabase Storage
     const imageUrl = product.gambar ? getImagePreview(product.gambar, 400, 400) : null;
     const imageContent = imageUrl ?
-        `<img src="${imageUrl}" alt="${product.nama_product}" onerror="this.parentElement.innerHTML='🖼️'">` :
+        `<img src="${imageUrl}" alt="${product['nama produk']}" onerror="this.parentElement.innerHTML='🖼️'">` :
         '🖼️';
 
     card.innerHTML = `
         <div class="product-image">${imageContent}</div>
         <div class="product-info">
             <span class="product-category">${product.kategori}</span>
-            <h3 class="product-name">${product.nama_product}</h3>
+            <h3 class="product-name">${product['nama produk']}</h3>
             <div class="product-price">Rp ${formatPrice(product.harga)}</div>
         </div>
     `;
@@ -219,12 +219,12 @@ function showProductDetail(product) {
 
     if (!modal || !modalTitle || !modalBody) return;
 
-    modalTitle.textContent = product.nama_product;
+    modalTitle.textContent = product['nama produk'];
 
     // Get image URL from Supabase Storage
     const imageUrl = product.gambar ? getImageUrl(product.gambar) : null;
     const imageContent = imageUrl ?
-        `<img src="${imageUrl}" alt="${product.nama_product}" class="modal-image" onerror="this.style.display='none'">` :
+        `<img src="${imageUrl}" alt="${product['nama produk']}" class="modal-image" onerror="this.style.display='none'">` :
         '<div class="modal-image" style="display: flex; align-items: center; justify-content: center; font-size: 5rem;">🖼️</div>';
 
     modalBody.innerHTML = `
@@ -232,7 +232,7 @@ function showProductDetail(product) {
         <div style="margin-bottom: 1rem;">
             <span class="product-category">${product.kategori}</span>
         </div>
-        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">${product.nama_product}</h3>
+        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">${product['nama produk']}</h3>
         <div style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem; background: var(--secondary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
             Rp ${formatPrice(product.harga)}
         </div>

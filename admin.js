@@ -253,14 +253,14 @@ function displayProductsList(products) {
     container.innerHTML = products.map(product => {
         const imageUrl = product.gambar ? getImagePreview(product.gambar, 80, 80) : null;
         const imageContent = imageUrl ?
-            `<img src="${imageUrl}" alt="${product.nama_product}" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-sm);">` :
+            `<img src="${imageUrl}" alt="${product['nama produk']}" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-sm);">` :
             '🖼️';
 
         return `
             <div class="product-item">
                 <div class="product-item-image">${imageContent}</div>
                 <div class="product-item-info">
-                    <div class="product-item-name">${product.nama_product}</div>
+                    <div class="product-item-name">${product['nama produk']}</div>
                     <div class="product-item-meta">
                         ${product.kategori} • Rp ${formatPrice(product.harga)}
                     </div>
@@ -269,7 +269,7 @@ function displayProductsList(products) {
                     <button class="btn btn-warning btn-small" onclick="editProduct('${product.id}')">
                         ✏️ Edit
                     </button>
-                    <button class="btn btn-danger btn-small" onclick="deleteProduct('${product.id}', '${product.nama_product}')">
+                    <button class="btn btn-danger btn-small" onclick="deleteProduct('${product.id}', '${product['nama produk']}')">
                         🗑️ Hapus
                     </button>
                 </div>
@@ -307,7 +307,7 @@ async function handleProductSubmit(e) {
 
     try {
         const productData = {
-            nama_product: document.getElementById('productName').value,
+            'nama produk': document.getElementById('productName').value,
             harga: parseFloat(document.getElementById('productPrice').value),
             kategori: document.getElementById('productCategory').value
         };
@@ -376,7 +376,7 @@ async function editProduct(productId) {
 
     editingProductId = product.id; // Use the actual numeric ID
 
-    document.getElementById('productName').value = product.nama_product;
+    document.getElementById('productName').value = product['nama produk'];
     document.getElementById('productPrice').value = product.harga;
     document.getElementById('productCategory').value = product.kategori;
 
