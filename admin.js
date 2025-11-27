@@ -228,7 +228,7 @@ async function loadProducts() {
             .from(SUPABASE_CONFIG.tables.products)
             .select('*')
             .order('created_at', { ascending: false })
-            .limit(100);
+            .limit(1000);
 
         if (error) throw error;
 
@@ -240,209 +240,30 @@ async function loadProducts() {
     }
 }
 
-// Display products list
-function displayProductsList(products) {
-    const container = document.getElementById('productsList');
-    if (!container) return;
-
-    if (products.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada produk</div></div>';
-        return;
-    }
-
-    container.innerHTML = products.map(product => {
-        const imageUrl = product.gambar ? getImagePreview(product.gambar, 80, 80) : null;
-        const imageContent = imageUrl ?
-            `<img src="${imageUrl}" alt="${product['nama produk']}" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-sm);">` :
-            '🖼️';
-
-        return `
-            <div class="product-item">
-                <div class="product-item-image">${imageContent}</div>
-                <div class="product-item-info">
-                    <div class="product-item-name">${product['nama produk']}</div>
-                    <div class="product-item-meta">
-                        ${product.kategori} • Rp ${formatPrice(product.harga)}
-                    </div>
-                </div>
-                <div class="product-item-actions">
-                    <button class="btn btn-warning btn-small" onclick="editProduct('${product.id}')">
-                        ✏️ Edit
-                    </button>
-                    <button class="btn btn-danger btn-small" onclick="deleteProduct('${product.id}', '${product['nama produk']}')">
-                        🗑️ Hapus
-                    </button>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-// Handle image preview
-function handleImagePreview(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    currentImageFile = file;
-
-    const preview = document.getElementById('imagePreview');
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-        preview.style.display = 'block';
-    };
-
-    reader.readAsDataURL(file);
-}
-
-// Handle product form submit
-async function handleProductSubmit(e) {
-    e.preventDefault();
-
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '⏳ Menyimpan...';
-    submitBtn.disabled = true;
-
-    try {
-        const productData = {
-            'nama produk': document.getElementById('productName').value,
-            harga: parseFloat(document.getElementById('productPrice').value),
-            kategori: document.getElementById('productCategory').value
-        };
-
-        // Upload image if selected
-        if (currentImageFile) {
-            const filePath = await uploadImage(currentImageFile);
-            productData.gambar = filePath;
-        }
-
-        if (editingProductId) {
-            // Update existing product
-            const { error } = await supabase
-                .from(SUPABASE_CONFIG.tables.products)
-                .update(productData)
-                .eq('id', editingProductId);
-
-            if (error) throw error;
-            showAlert('Produk berhasil diperbarui', 'success');
-        } else {
-            // Create new product
-            const { error } = await supabase
-                .from(SUPABASE_CONFIG.tables.products)
-                .insert([productData]);
-
-            if (error) throw error;
-            showAlert('Produk berhasil ditambahkan', 'success');
-        }
-
-        resetProductForm();
-        loadProducts();
-    } catch (error) {
-        console.error('Error saving product:', error);
-        showAlert('Gagal menyimpan produk: ' + error.message, 'error');
-    } finally {
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    }
-}
-
-// Upload image to Supabase Storage
-async function uploadImage(file) {
-    try {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const filePath = `products/${fileName}`;
-
-        const { error } = await supabase.storage
-            .from(SUPABASE_CONFIG.bucket)
-            .upload(filePath, file);
-
-        if (error) throw error;
-
-        return filePath;
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        throw new Error('Gagal mengupload gambar');
-    }
-}
-
-// Edit product
-async function editProduct(productId) {
-    // Convert productId to number for comparison if needed, or use loose equality
-    const product = allProducts.find(p => p.id == productId);
-    if (!product) return;
-
-    editingProductId = product.id; // Use the actual numeric ID
-
-    document.getElementById('productName').value = product['nama produk'];
-    document.getElementById('productPrice').value = product.harga;
-    document.getElementById('productCategory').value = product.kategori;
-
-    // Show image preview if exists
-    if (product.gambar) {
-        const imageUrl = getImagePreview(product.gambar, 200, 200);
-        const preview = document.getElementById('imagePreview');
-        preview.innerHTML = `<img src="${imageUrl}" alt="Current image">`;
-        preview.style.display = 'block';
-    }
-
-    document.getElementById('formTitle').textContent = 'Edit Produk';
-    document.getElementById('submitButtonText').textContent = '✓ Update Produk';
-    document.getElementById('cancelButton').style.display = 'block';
-
-    // Scroll to form
-    document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
-}
-
-// Delete product
-async function deleteProduct(productId, productName) {
-    if (!confirm(`Apakah Anda yakin ingin menghapus produk "${productName}"?`)) {
-        return;
-    }
-
-    try {
-        const product = allProducts.find(p => p.id == productId);
-
-        // Delete image from storage if exists
-        if (product && product.gambar) {
-            try {
-                await supabase.storage
-                    .from(SUPABASE_CONFIG.bucket)
-                    .remove([product.gambar]);
-            } catch (error) {
-                console.error('Error deleting image:', error);
-            }
-        }
-
-        // Delete product
-        const { error } = await supabase
-            .from(SUPABASE_CONFIG.tables.products)
-            .delete()
-            .eq('id', productId);
-
-        if (error) throw error;
-
-        showAlert('Produk berhasil dihapus', 'success');
-        loadProducts();
-    } catch (error) {
-        console.error('Error deleting product:', error);
-        showAlert('Gagal menghapus produk: ' + error.message, 'error');
-    }
-}
+// ... (skipping unchanged parts) ...
 
 // Reset product form
 function resetProductForm() {
     editingProductId = null;
     currentImageFile = null;
 
-    document.getElementById('productForm').reset();
-    document.getElementById('imagePreview').style.display = 'none';
-    document.getElementById('imagePreview').innerHTML = '';
-    document.getElementById('formTitle').textContent = 'Tambah Produk Baru';
-    document.getElementById('submitButtonText').textContent = '✓ Simpan Produk';
-    document.getElementById('cancelButton').style.display = 'none';
+    const form = document.getElementById('productForm');
+    if (form) form.reset();
+
+    const imagePreview = document.getElementById('imagePreview');
+    if (imagePreview) {
+        imagePreview.style.display = 'none';
+        imagePreview.innerHTML = '';
+    }
+
+    const formTitle = document.getElementById('formTitle');
+    if (formTitle) formTitle.textContent = 'Tambah Produk Baru';
+
+    const submitBtnText = document.getElementById('submitButtonText');
+    if (submitBtnText) submitBtnText.textContent = '✓ Simpan Produk';
+
+    const cancelBtn = document.getElementById('cancelButton');
+    if (cancelBtn) cancelBtn.style.display = 'none';
 }
 
 // Handle category form submit

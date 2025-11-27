@@ -120,7 +120,7 @@ async function loadProducts() {
             .from(SUPABASE_CONFIG.tables.products)
             .select('*')
             .order('created_at', { ascending: false })
-            .limit(100);
+            .limit(1000);
 
         if (error) throw error;
 
