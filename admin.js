@@ -370,10 +370,11 @@ async function uploadImage(file) {
 
 // Edit product
 async function editProduct(productId) {
-    const product = allProducts.find(p => p.id === productId);
+    // Convert productId to number for comparison if needed, or use loose equality
+    const product = allProducts.find(p => p.id == productId);
     if (!product) return;
 
-    editingProductId = productId;
+    editingProductId = product.id; // Use the actual numeric ID
 
     document.getElementById('productName').value = product.nama_product;
     document.getElementById('productPrice').value = product.harga;
@@ -402,7 +403,7 @@ async function deleteProduct(productId, productName) {
     }
 
     try {
-        const product = allProducts.find(p => p.id === productId);
+        const product = allProducts.find(p => p.id == productId);
 
         // Delete image from storage if exists
         if (product && product.gambar) {
@@ -491,10 +492,10 @@ async function handleCategorySubmit(e) {
 
 // Edit category
 async function editCategory(categoryId) {
-    const category = allCategories.find(c => c.id === categoryId);
+    const category = allCategories.find(c => c.id == categoryId);
     if (!category) return;
 
-    editingCategoryId = categoryId;
+    editingCategoryId = category.id;
 
     document.getElementById('categoryName').value = category.name;
     document.getElementById('categoryOrder').value = category.display_order || 0;
