@@ -78,5 +78,15 @@
     <script src="supabase-config.js"></script>
     <!-- Main Script -->
     <script src="script.js"></script>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- PWA Service Worker Registration -->
+    <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('Service Worker registered', reg))
+        .catch(err => console.error('Service Worker failed', err));
+    }
+    </script>
 </body>
 </html>
