@@ -1,10 +1,10 @@
 {
-  "name": "PT VALOR INSPIRATION PESONA",
-  "short_name": "VIP Katalog",
-  "start_url": "index.html",
+  "name": "Vip Katalog",
+  "short_name": "Vip",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f0f1e",
-  "theme_color": "#C27D29",
+  "background_color": "#F4930B",
+  "theme_color": "#F4930B",
   "description": "Katalog produk PT VALOR INSPIRATION PESONA",
   "icons": [
     {
