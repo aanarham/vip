@@ -10,6 +10,25 @@ let isLoggedIn = false;
 document.addEventListener('DOMContentLoaded', () => {
     checkAuthStatus();
     initializeEventListeners();
+    // Search event for admin
+    const adminSearchInput = document.getElementById('adminSearchInput');
+    if (adminSearchInput) {
+        adminSearchInput.addEventListener('input', (e) => {
+            filterAdminProducts(e.target.value);
+        });
+    }
+// Filter products in admin panel
+function filterAdminProducts(query) {
+    query = (query || '').toLowerCase();
+    let filtered = allProducts;
+    if (query) {
+        filtered = filtered.filter(p =>
+            (p['nama produk'] && p['nama produk'].toLowerCase().includes(query)) ||
+            (p.kategori && p.kategori.toLowerCase().includes(query))
+        );
+    }
+    displayProductsList(filtered);
+}
 });
 
 // Admin credentials

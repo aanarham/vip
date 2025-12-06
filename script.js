@@ -191,12 +191,11 @@ function createProductCard(product, index) {
     const card = document.createElement('div');
     card.className = 'product-card';
     card.style.animationDelay = `${index * 0.05}s`;
-    card.onclick = () => showProductDetail(product);
-
     // Get image URL from Supabase Storage
     const imageUrl = product.gambar ? getImagePreview(product.gambar, 400, 400) : null;
+    const fullImageUrl = product.gambar ? getImageUrl(product.gambar) : null;
     const imageContent = imageUrl ?
-        `<img src="${imageUrl}" alt="${product['nama produk']}" onerror="this.parentElement.innerHTML='🖼️'">` :
+        `<img src="${imageUrl}" alt="${product['nama produk']}" class="product-img-thumb" data-fullimg="${fullImageUrl}" onerror="this.parentElement.innerHTML='🖼️'">` :
         '🖼️';
 
     card.innerHTML = `
@@ -208,6 +207,16 @@ function createProductCard(product, index) {
         </div>
     `;
 
+    // Click on card shows product detail
+    card.onclick = () => showProductDetail(product);
+    // Click on image shows full image modal
+    const imgElem = card.querySelector('.product-img-thumb');
+    if (imgElem) {
+        imgElem.onclick = (e) => {
+            e.stopPropagation();
+            showFullImageModal(imgElem.dataset.fullimg, product['nama produk']);
+        };
+    }
     return card;
 }
 
@@ -241,6 +250,18 @@ function showProductDetail(product) {
         </div>
     `;
 
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Show full image modal
+function showFullImageModal(imageUrl, altText) {
+    const modal = document.getElementById('productModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    if (!modal || !modalTitle || !modalBody) return;
+    modalTitle.textContent = altText || 'Gambar Produk';
+    modalBody.innerHTML = `<img src="${imageUrl}" alt="${altText}" class="modal-image-full" style="width:100%;max-width:800px;display:block;margin:auto;" onerror="this.onerror=null;this.src='https://via.placeholder.com/800x600?text=Gambar+tidak+tersedia';">`;
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
