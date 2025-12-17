@@ -19,7 +19,7 @@ window.supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABA
 // Helper function to get image URL from Supabase Storage
 function getImageUrl(filePath) {
     if (!filePath) return null;
-    const { data } = supabase.storage
+    const { data } = window.supabaseClient.storage
         .from(SUPABASE_CONFIG.bucket)
         .getPublicUrl(filePath);
     return data.publicUrl;
@@ -29,7 +29,7 @@ function getImageUrl(filePath) {
 function getImagePreview(filePath, width = 400, height = 400) {
     if (!filePath) return null;
     // Fallback to standard URL since Image Transformations might not be enabled on free plan
-    const { data } = supabase.storage
+    const { data } = window.supabaseClient.storage
         .from(SUPABASE_CONFIG.bucket)
         .getPublicUrl(filePath);
     return data.publicUrl;
