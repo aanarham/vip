@@ -179,7 +179,7 @@ async function loadCategories() {
     if (!isLoggedIn) return;
 
     try {
-        const { data, error } = await supabase
+            const { data, error } = await window.supabaseClient
             .from(SUPABASE_CONFIG.tables.categories)
             .select('*')
             .order('display_order', { ascending: true })
@@ -243,7 +243,7 @@ async function loadProducts() {
     if (!isLoggedIn) return;
 
     try {
-        const { data, error } = await supabase
+            const { data, error } = await window.supabaseClient
             .from(SUPABASE_CONFIG.tables.products)
             .select('*')
             .order('created_at', { ascending: false })
@@ -339,7 +339,7 @@ async function handleProductSubmit(e) {
 
         if (editingProductId) {
             // Update existing product
-            const { error } = await supabase
+                const { error } = await window.supabaseClient
                 .from(SUPABASE_CONFIG.tables.products)
                 .update(productData)
                 .eq('id', editingProductId);
@@ -348,7 +348,7 @@ async function handleProductSubmit(e) {
             showAlert('Produk berhasil diperbarui', 'success');
         } else {
             // Create new product
-            const { error } = await supabase
+                const { error } = await window.supabaseClient
                 .from(SUPABASE_CONFIG.tables.products)
                 .insert([productData]);
 
@@ -423,7 +423,7 @@ async function deleteProduct(productId, productName) {
 
         if (product && product.gambar) {
             try {
-                await supabase.storage
+                    await window.supabaseClient.storage
                     .from(SUPABASE_CONFIG.bucket)
                     .remove([product.gambar]);
             } catch (error) {
@@ -431,7 +431,7 @@ async function deleteProduct(productId, productName) {
             }
         }
 
-        const { error } = await supabase
+            const { error } = await window.supabaseClient
             .from(SUPABASE_CONFIG.tables.products)
             .delete()
             .eq('id', productId);
