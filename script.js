@@ -36,7 +36,7 @@ function initializeEventListeners() {
 // Load categories from Supabase
 async function loadCategories() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from(SUPABASE_CONFIG.tables.categories)
             .select('*')
             .order('display_order', { ascending: true });
@@ -116,7 +116,7 @@ function handleCategoryClick(e) {
 // Load products from Supabase
 async function loadProducts() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from(SUPABASE_CONFIG.tables.products)
             .select('*')
             .order('created_at', { ascending: false })

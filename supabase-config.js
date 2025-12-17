@@ -14,7 +14,7 @@ const SUPABASE_CONFIG = {
 };
 
 // Initialize Supabase Client
-const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+window.supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
 // Helper function to get image URL from Supabase Storage
 function getImageUrl(filePath) {
