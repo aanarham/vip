@@ -385,7 +385,7 @@ async function uploadImage(file) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `products/${fileName}`;
-        const { error } = await supabase.storage
+        const { error } = await window.supabaseClient.storage
             .from(SUPABASE_CONFIG.bucket)
             .upload(filePath, file);
         if (error) throw error;
